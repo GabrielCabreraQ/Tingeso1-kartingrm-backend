@@ -19,10 +19,12 @@ pipeline{
         stage("Build and Push Docker Image"){
             steps{
                     script{
-                         withDockerRegistry(credentialsId: 'docker-credentials'){
+                            withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'docker-user', passwordVariable: 'docker-pass')]) {
                             bat "docker build -t gabrielcq/kartingrm-backend ."
+                            bat 'docker login -u %docker-user% -p %docker-pass%'
                             bat "docker push gabrielcq/kartingrm-backend"
-                        }
+                                
+                     }
                  }                 
             }
         }
