@@ -1,38 +1,30 @@
-pipeline {
+pipeline{
     agent any
     tools{
-        maven 'Maven'
+        maven "Maven"
     }
     stages{
-        stage('Build maven'){
+        stage("Build JAR File"){
             steps{
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/GabrielCabreraQ/Tingeso1-kartingrm-backend']])
-                bat 'mvn clean install'
-            }
-        }
-
-        stage('Unit Tests') {
-            steps {
-                // Run Maven 'test' phase. It compiles the test sources and runs the unit tests
-                bat 'mvn test' // Use 'bat' for Windows agents or 'sh' for Unix/Linux agents
-            }
-        }
-
-        stage('Build docker image'){
-            steps{
-                script{
-                    bat 'docker build -t gabrielcq/kartingrm-backend .'
+                {
+                    bat "mvn clean install"
                 }
             }
         }
-        stage('Push image to Docker Hub'){
+        stage("Test"){
             steps{
-                script{
-                   withCredentials([string(credentialsId: 'docker-credentials', variable: 'password')]) {
-                        bat 'docker login -u gabrielcq -p %password%'
-                   }
-                   bat 'docker push gabrielcq/kartingrm-backend'
-                }
+                    bat "mvn test"
+            }
+        }        
+        stage("Build and Push Docker Image"){
+            steps{
+                    script{
+                         withDockerRegistry(credentialsId: 'docker-credentials'){
+                            bat "docker build -t gabrielcq/kartingrm-backend ."
+                            bat "docker push gabrielcq/kartingrm-backend"
+                        }
+                 }                 
             }
         }
     }
