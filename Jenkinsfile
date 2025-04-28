@@ -7,14 +7,13 @@ pipeline{
         stage("Build JAR File"){
             steps{
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/GabrielCabreraQ/Tingeso1-kartingrm-backend']])
-                {
+                
                     bat "mvn clean install"
                 }
             }
-        }
         stage("Test"){
             steps{
-                    bat "mvn test"
+                 bat "mvn test"
             }
         }        
         stage("Build and Push Docker Image"){
