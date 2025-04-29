@@ -374,7 +374,7 @@ public class BookingService {
     public void saveExcelToDesktop(byte[] excelPath, BookingEntity savedBooking) throws IOException {
         // Obtener la ruta del escritorio
         String userProfile = System.getProperty("user.name");  // Obtiene el nombre del usuario
-        Path desktopPath = Paths.get("C:\\Users\\" + userProfile + "\\Desktop", "reserva_" + savedBooking.getId() + ".xlsx");
+        Path desktopPath = Paths.get("C:\\Users\\" + userProfile + "\\Downloads", "reserva_" + savedBooking.getId() + ".xlsx");
 
         // Guardar el archivo en el escritorio
         Files.write(desktopPath, excelPath);
